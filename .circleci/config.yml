@@ -5,21 +5,8 @@ orbs:
 
 
 jobs:
-  build:
-    working_directory: ~/circleci-python
-    docker:
-      - image: "circleci/python:latest"
-    steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: pip
-      - run: 
-          name: Run script
-          command: python3 hello.py
-  test:
-    working_directory: ~/circleci-python
-    docker:
-      - image: "circleci/python:latest"
+  build-and-test:
+    executor: python/default
     steps:
       - checkout
       - python/install-packages:
@@ -27,14 +14,21 @@ jobs:
       - run: 
           name: Run tests
           command: python3 hello-test.py
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+  # deploy:
+    # executor:
+    # steps:
 
 workflows:
-  build_and_test:
+  build-test-deploy:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
+      - build-and-test
+      # - deploy:
+      #     requires:
+      #       - build-and-test
+      #     filters:
+      #       branches:
+      #         only: main
