@@ -7,7 +7,7 @@ jobs:
       - image: "circleci/python:latest"
     steps:
       - checkout
-      - python/install-packages:
+      - python3/install-packages:
           pkg-manager: pip
       - run: python3 hello.py
   test:
@@ -16,7 +16,7 @@ jobs:
       - image: "circleci/python:latest"
     steps:
       - checkout
-      - python/install-packages:
+      - python3/install-packages:
           pkg-manager: pip
       - run: python3 hello-test.py
 
