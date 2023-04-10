@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.0.3
+  heroku: circleci/heroku@1.2.6
 
 
 jobs:
@@ -18,17 +19,21 @@ jobs:
           root: ~/project
           paths:
             - .
-  # deploy:
-    # executor:
-    # steps:
+  deploy:
+    executor: heroku/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - heroku/deploy-via-git:
+          force: true
 
 workflows:
   build-test-deploy:
     jobs:
       - build-and-test
-      # - deploy:
-      #     requires:
-      #       - build-and-test
-      #     filters:
-      #       branches:
-      #         only: main
+      - deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: main
